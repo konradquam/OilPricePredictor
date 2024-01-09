@@ -161,3 +161,6 @@ cython_debug/
 
 #Ignore nasdaq data link api key
 /nasdaq_api_key.txt
+
+#Ignore the db config
+/db_config.json

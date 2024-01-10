@@ -2,6 +2,7 @@ import unittest
 import pandas as pd
 from OilPricePredictor.src import DataGetter
 
+
 class db_tester(unittest.TestCase):
     '''
     Test that the database can be connected to,
@@ -15,7 +16,7 @@ class db_tester(unittest.TestCase):
         Test inserting data,
         Test retrieving data,
         Test deleting data,
-        ----
+        ---
         All in one function because I need to retrieve inserted data to ensure correct data was inserted,
         I also need to delete data so I don't leave fake data in db
         :return: None

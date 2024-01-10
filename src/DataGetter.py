@@ -4,12 +4,13 @@ from OilPricePredictor.classes import API_Key_Getter as Key_Getter
 from OilPricePredictor.classes import JSON_Reader
 import psycopg2
 
-#filepath variables
+# filepath variables
 api_key_path = '../nasdaq_api_key.txt'
 db_config_path = '../db_config.json'
 
-#cursor for database connection
+# cursor for database connection
 cursor = None
+
 
 def from_api(start_date, end_date, api_key_path='../nasdaq_api_key.txt'):
     '''
@@ -27,9 +28,7 @@ def from_api(start_date, end_date, api_key_path='../nasdaq_api_key.txt'):
     data = data.rename(columns={'value': 'price'})
     return data
 
-# data = from_api('2024-01-02', '2024-01-04')
-# print(data)
-# print((data.loc[0, "date"], data.loc[0, "price"]))
+
 def conn_db(db_config_path=db_config_path):
     '''
     Connects to database
@@ -42,6 +41,7 @@ def conn_db(db_config_path=db_config_path):
     db_conn = psycopg2.connect(database=db_config['database'], host=db_config['host'], user=db_config['username'], password=db_config['password'], port=db_config['port'])
     cursor = db_conn.cursor()
 
+
 def insert_db(data):
     '''
     Inserts data into database
@@ -50,6 +50,7 @@ def insert_db(data):
     '''
     for i in range(data.shape[0]):
         cursor.execute('INSERT INTO opec_prices (price_date, price) VALUES (%s, %s)', (data.loc[i, "date"], data.loc[i, "price"]))
+
 
 def get_db(start_date, end_date):
     '''
@@ -63,6 +64,7 @@ def get_db(start_date, end_date):
     data['date'] = data['date'].astype(str)
     data['price'] = data['price'].astype(float)
     return data
+
 
 def delete_db(start_date, end_date):
     '''

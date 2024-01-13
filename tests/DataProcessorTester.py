@@ -2,15 +2,18 @@ import unittest
 import pandas as pd
 from random import randint
 
-from OilPricePredictor.src import DataGetter
+import torch
+
 from OilPricePredictor.src.DataProcessor import train_val_test_split
 from OilPricePredictor.src.DataProcessor import set_n_tokens
 from OilPricePredictor.src.DataProcessor import chunk_data
+from OilPricePredictor.src.DataProcessor import encode
 
 class DataProcessorTester(unittest.TestCase):
     '''
     Test splitting data into train, val, and test data ---
-    Test dividing data into contiguous chunks, keeping data in order
+    Test dividing data into contiguous chunks, keeping data in order ---
+    Test encoding data into pytorch tensor
     '''
 
     def test_chunking(self):
@@ -93,3 +96,9 @@ class DataProcessorTester(unittest.TestCase):
         test_size = 0.1
         with self.assertRaises(ZeroDivisionError):
             train_val_test_split(data, val_size, test_size)
+
+    def test_encoder(self):
+        data = pd.DataFrame({'price': [randint(0, 100) for i in range(100)]})
+        data = encode(data)
+
+        self.assertIsInstance(data, torch.Tensor)

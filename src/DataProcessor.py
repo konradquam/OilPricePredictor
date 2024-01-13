@@ -106,6 +106,15 @@ def train_val_test_split(data, val_size, test_size):
     return train_data, val_data, test_data
 
 
+def encode(data):
+    '''
+    data to encode, should be a chunk
+    :param data: the data to encode into a tensor (should be in a pandas dataframe with 'price' column)
+    :return: tensor of price data
+    '''
+    return torch.tensor(data['price'].values)
+
+
 
 
 

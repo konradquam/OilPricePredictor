@@ -3,7 +3,7 @@ import pandas as pd
 from OilPricePredictor.src import DataGetter
 
 
-class db_tester(unittest.TestCase):
+class DB_Tester(unittest.TestCase):
     '''
     Test that the database can be connected to,
     Test inserting data,

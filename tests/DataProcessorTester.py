@@ -8,6 +8,7 @@ from OilPricePredictor.src.DataProcessor import train_val_test_split
 from OilPricePredictor.src.DataProcessor import set_n_tokens
 from OilPricePredictor.src.DataProcessor import chunk_data
 from OilPricePredictor.src.DataProcessor import encode
+from OilPricePredictor.src.DataProcessor import get_batch
 
 class DataProcessorTester(unittest.TestCase):
     '''
@@ -102,3 +103,30 @@ class DataProcessorTester(unittest.TestCase):
         data = encode(data)
 
         self.assertIsInstance(data, torch.Tensor)
+
+    def test_get_batch(self):
+        '''
+        Test getting a batch of data
+        :return: None
+        '''
+        n_tokens = 4
+        data_size = 100
+        val_size = 0.1
+        test_size = 0.1
+        batch_size = 4
+
+        set_n_tokens(n_tokens)
+        data = pd.DataFrame({'price': [randint(0, 100) for i in range(data_size)]})
+        train, val, test = train_val_test_split(data, val_size, test_size)
+
+        x, y = get_batch(train, batch_size)
+
+        print(x)
+        print(y)
+
+        self.assertEqual((batch_size, n_tokens), x.shape)
+        self.assertEqual((batch_size, n_tokens), y.shape)
+        self.assertEqual([torch.equal(x[i][1:], (y[i][:-1])) for i in range(batch_size)], [True for i in range(batch_size)])
+
+
+

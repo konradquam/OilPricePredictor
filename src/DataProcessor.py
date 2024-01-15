@@ -3,7 +3,7 @@ from random import randint
 import torch
 
 n_tokens = None # TODO
-
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def set_n_tokens(num):
     '''
@@ -114,6 +114,29 @@ def encode(data):
     '''
     return torch.tensor(data['price'].values)
 
+
+def get_batch(data, batch_size):
+    '''
+    Gets a batch of data ---
+    Samples examples from data, encodes the examples and adds the inputs to and x tensor and the outputs to a y tensor
+    :param data: list of pandas dataframes with price columns (train, val, or test data)
+    :param batch_size: the number of examples per batch
+    :return: Two tensors, one input (X) and one target (y)
+    '''
+    x = []
+    y = []
+    for i in range(batch_size):
+        chunk_num = randint(0, len(data) - 1)
+        start = randint(0, len(data[chunk_num]) - (n_tokens + 1))  # start of sequence to sample from
+        x.append(encode(data[chunk_num][start: start + n_tokens]))  # +1 cause not inclusive of end
+        y.append(encode(data[chunk_num][start + 1: start + n_tokens + 1]))
+
+    x = torch.stack(x)
+    y = torch.stack(y)
+
+    x, y = x.to(device), y.to(device)
+
+    return x, y
 
 
 

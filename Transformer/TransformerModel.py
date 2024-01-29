@@ -1,5 +1,6 @@
 import torch.nn as nn
 import Transformer
+import FloatEmbedding
 import PositionalEncoder
 import math
 
@@ -23,11 +24,11 @@ class TransformerNN(nn.Module):
     self.dropout = nn.Dropout(dropout)
 
     # layers
-    self.embedding = nn.Embedding(vocab_size, n_features)
+    self.embedding = FloatEmbedding.FloatEmbedding(n_features)
     self.positions_enc = PositionalEncoder(n_tokens, n_features, dropout)
     self.transformers = nn.Sequential(*[Transformer(n_tokens, n_features, n_heads, dropout) for i in range(n_layers)])
     self.ln_f = nn.LayerNorm(n_features)
-    self.lin = nn.Linear(n_features, vocab_size)
+    self.lin = nn.Linear(n_features, 1)
 
     # initialize weights
     self.apply(self._init_weights)
